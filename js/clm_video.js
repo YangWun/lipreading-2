@@ -152,6 +152,8 @@ function drawLoop() {
 
 					if(calibrateModeOn) //calibration mode
 					{
+						recordNoseLength(currPos);
+
 						var inputWord = prompt("What word spoken?");
 						askSaveCalibrationMatrix(inputWord, pathsCopy);
 					}
