@@ -133,6 +133,9 @@ function getBestWord(queryPath)
 				bestWord = word;
 			}
 		}
+    // draw bar chart of best five words
+    drawchart(results);
+    // print to console
 		console.log(results);
 		alert(bestWord + " " + minScore);
 		halt = false;
@@ -141,4 +144,62 @@ function getBestWord(queryPath)
 	// while(halt) {}
 }
 
+function sortfunction(a,b) {
+  if (a[1] == b[1]) {
+    return 0;
+  } else {
+    return (a[1] < b[1]) ? -1:1;
+  }
+}
 
+function getcol(matrix, col) {
+  var vec = [];
+  var len = matrix.length;
+  for (var i=0; i<len; i++) {
+    vec.push(matrix[i][col]);
+  }
+  return vec;
+}
+
+function drawchart(results) {
+  // make chart area visible
+  // document.getElementById('chart').style.display = "block";
+  $('#chart').show();
+  // sort results from best to worst score
+  results.sort(sortfunction);
+  var words = getcol(results, 0);
+  var scores = getcol(results, 1);
+	var chart = $('#chart').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: '5 Best Matching Words'
+		},
+		subtitle: {
+			text: 'lowest score = best match'
+		},
+		xAxis: {
+			categories: results,
+			title: {text: null}
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				text: 'Score',
+				align: 'high'
+			},
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		credits: {
+			enabled: false
+		},
+		series: [{
+			showInLegend: false,
+			name: 'Score',
+			data: scores
+		}]
+	});
+}
