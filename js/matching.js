@@ -136,12 +136,12 @@ function getBestWord(queryPath)
 			}
 		}
     // draw bar chart of best five words
-    drawchart(results);
-    // print to console
-		console.log(results);
-		alert(bestWord + " " + minScore);
-		halt = false;
-	});
+ //    drawchart(results);
+ //    // print to console
+	// 	console.log(results);
+	// 	alert(bestWord + " " + minScore);
+	// 	halt = false;
+	// });
 }
 
 var noseRecorded = false;
@@ -158,7 +158,6 @@ function recordNoseLength(currPos)
 	firebase.child("noseLength").set(length);
 }
 
-<<<<<<< HEAD
 function setScale(currPos)
 {
 	var length = Math.abs(currPos[33][1] - currPos[62][1]); //length of nose bridge
