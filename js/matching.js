@@ -104,7 +104,7 @@ function getScore(A, B, i, j)
 	return memo[i][j];
 }
 
-var dictionary = ["potato", "colonoscopy", "meandering", "diabetes"];
+var dictionary = ["potato", "colonoscopy", "diabetes", "corn", "computer"];
 function getBestWord(queryPath)
 {
 	if(!confirm("Test with this query?"))
@@ -117,6 +117,8 @@ function getBestWord(queryPath)
 	var results = [];
 	var halt = true;
 	firebase.child("calibrationMatrices").on("value", function(snapshot) {
+		if(calibrateModeOn)
+			return;
 		var calib = snapshot.val();
 		for(var i = 0; i < dictionary.length; i++) //compare against each word
 		{
@@ -133,12 +135,100 @@ function getBestWord(queryPath)
 				bestWord = word;
 			}
 		}
-		console.log(results);
-		alert(bestWord + " " + minScore);
-		halt = false;
+		alert("Best match: " + bestWord + ". Score: " + minScore);
 	});
 
-	// while(halt) {}
+}
+    // draw bar chart of best five words
+ //    drawchart(results);
+ //    // print to console
+	// 	console.log(results);
+	// 	alert(bestWord + " " + minScore);
+	// 	halt = false;
+	// });
+
+
+var noseRecorded = false;
+function recordNoseLength(currPos)
+{
+	//record only once
+	if(noseRecorded)
+		return;
+	noseRecorded = true;
+
+	var length = Math.abs(currPos[33][1] - currPos[62][1]); //length of nose bridge
+	
+	//put in firebase
+	firebase.child("noseLength").set(length);
 }
 
+function setScale(currPos)
+{
+	var length = Math.abs(currPos[33][1] - currPos[62][1]); //length of nose bridge
+	if(noseLength == -1)
+	{
+		firebase.child("noseLength").on("value", function(snapshot) {
+			noseLength = snapshot.val();
+		});
+	}
+}
 
+function sortfunction(a,b) {
+  if (a[1] == b[1]) {
+    return 0;
+  } else {
+    return (a[1] < b[1]) ? -1:1;
+  }
+}
+
+function getcol(matrix, col) {
+  var vec = [];
+  var len = matrix.length;
+  for (var i=0; i<len; i++) {
+    vec.push(matrix[i][col]);
+  }
+  return vec;
+}
+
+function drawchart(results) {
+  // make chart area visible
+  // document.getElementById('chart').style.display = "block";
+  $('#chart').show();
+  // sort results from best to worst score
+  results.sort(sortfunction);
+  var words = getcol(results, 0);
+  var scores = getcol(results, 1);
+	var chart = $('#chart').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: '5 Best Matching Words'
+		},
+		subtitle: {
+			text: 'lowest score = best match'
+		},
+		xAxis: {
+			categories: results,
+			title: {text: null}
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				text: 'Score',
+				align: 'high'
+			},
+			labels: {
+				overflow: 'justify'
+			}
+		},
+		credits: {
+			enabled: false
+		},
+		series: [{
+			showInLegend: false,
+			name: 'Score',
+			data: scores
+		}]
+	});
+}
