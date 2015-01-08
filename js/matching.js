@@ -99,17 +99,14 @@ function getBestWord(queryPath) {
 var dictionary = ["potato", "colonoscopy", "diabetes", "computer"];
   if(!confirm("Test with this query?"))
     return;
-  $('#chart').hide();
-  $('#loading').show();
-  // alert("Currently finding best word");
+  document.getElementById("chart").style.display = "none";
+  document.getElementById("loading").style.display = "block";
   var minScore = INF;
   var bestWord = "NOT FOUND";
 
   var results = [];
   var halt = true;
   firebase.child("calibrationMatrices").on("value", function(snapshot) {
-    if(calibrateModeOn)
-      return;
     var calib = snapshot.val();
     for(var i = 0; i < dictionary.length; i++) { //compare against each word
       var word = dictionary[i];
@@ -125,10 +122,10 @@ var dictionary = ["potato", "colonoscopy", "diabetes", "computer"];
       }
     }
     // alert("Best match: " + bestWord + ". Score: " + minScore);
-    $('#loading').hide();
+    document.getElementById("loading").style.display = "none";
     // draw bar chart of best five words
     drawchart(results);
-    $('#chart').show();
+    document.getElementById("chart").style.display = "block";
   });
 }
 
@@ -181,10 +178,10 @@ function drawchart(results) {
       type: 'bar'
     },
     title: {
-      text: '5 Best Matching Words'
+      text: 'Best Matching Words'
     },
     subtitle: {
-      text: 'lowest score = best match'
+      text: 'best match has lowest score'
     },
     xAxis: {
       categories: words,
