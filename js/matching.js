@@ -106,11 +106,10 @@ var dictionary = ["potato", "colonoscopy", "diabetes", "computer"];
 
   var results = [];
   var halt = true;
-  firebase.child("calibrationMatrixList").on("value", function(snapshot) {
+  firebase.child("calibrationMatrixList").once("value", function(snapshot) {
     var calib = snapshot.val();
     for(var i = 0; i < calib.length; i++) { //compare against each word
       var entry = calib[i];
-      console.log(entry);
       if(entry === "undefined")
       	continue;
 
@@ -128,12 +127,47 @@ var dictionary = ["potato", "colonoscopy", "diabetes", "computer"];
         bestWord = word;
       }
     }
+    knn(results, 5);
     // alert("Best match: " + bestWord + ". Score: " + minScore);
     document.getElementById("loading").style.display = "none";
     // draw bar chart of best five words
     drawchart(results);
     document.getElementById("chart").style.display = "block";
   });
+}
+
+function mode(array)
+{
+    if(array.length == 0)
+    	return null;
+    var modeMap = {};
+    var maxEl = array[0], maxCount = 1;
+    for(var i = 0; i < array.length; i++)
+    {
+    	var el = array[i];
+    	if(modeMap[el] == null)
+    		modeMap[el] = 1;
+    	else
+    		modeMap[el]++;	
+    	if(modeMap[el] > maxCount)
+    	{
+    		maxEl = el;
+    		maxCount = modeMap[el];
+    	}
+    }
+
+    return maxEl;
+}
+
+function knn(results, k)
+{
+	//get top k matches
+	results.sort(sortfunction);
+	var neighbors = [];
+	for(var i = 0; i < Math.min(results, k); i++)
+		neighbors.push(results[i][0]);
+
+	console.log(mode(getcol(results,0)));
 }
 
 var noseRecorded = false;
