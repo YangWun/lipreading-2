@@ -100,6 +100,10 @@ function drawLoop() {
 		drawLips(overlay, currPos);
 		displayPoints(currPos);
 
+		if(calibrateModeOn)
+			scale = 1;
+		else
+			scale = noseLength / Math.abs(currPos[33][1] - currPos[62][1]);
 
 		if(paths.length < MIN_PATHS_LENGTH || spokenTimer > 0) //fill to 25 or currently speaking
 			addPoints(paths, currPos);
