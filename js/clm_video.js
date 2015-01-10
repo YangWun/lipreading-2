@@ -145,12 +145,15 @@ function drawLoop() {
             pathsCopy.push(paths.shift());
 
           if(calibrateModeOn) { //calibration mode
+          	spokenTimer = 0;
             var inputWord = prompt("What word spoken?");
             askSaveCalibrationMatrix(inputWord, pathsCopy);
             recordNoseLength(currPos); //assumes user's head is in a good position
           } else { //testing mode
             getBestWord(pathsCopy);
           }
+
+          paths = [];
         }
         closedTimer = spokenTimer = 0;
       }
