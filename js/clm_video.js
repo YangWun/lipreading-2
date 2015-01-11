@@ -40,7 +40,7 @@ function drawLoop() {
   var currPos = ctrack.getCurrentPosition()
   if (currPos) {
     drawLips(overlay, currPos);
-    displayPoints(currPos);
+    // displayPoints(currPos);
   }
 }
 
@@ -127,7 +127,7 @@ function calcLoop() {
 
   if (currPos) {
     drawLips(overlay, currPos);
-    displayPoints(currPos);
+    // displayPoints(currPos);
 
 	if(calibrateModeOn)
 		scale = 1;
@@ -162,11 +162,11 @@ function calcLoop() {
       else { //reached threshold of closedTimer, assume mouth is closed indefinitely now
         //code executes when user finishes speaking!
         if(spokenTimer > SPOKEN_LIMIT) {
-          var pathStr = document.getElementById('paths');
-          pathStr.innerHTML = "";
-          for(var i = 0; i < paths[0].length; i++) { //first frame, 18 points
-            pathStr.innerHTML += "Point " + i + ": " + ptToString(paths[0][i][0], paths[0][i][1]);
-          }
+          // var pathStr = document.getElementById('paths');
+          // pathStr.innerHTML = "";
+          // for(var i = 0; i < paths[0].length; i++) { //first frame, 18 points
+          //   pathStr.innerHTML += "Point " + i + ": " + ptToString(paths[0][i][0], paths[0][i][1]);
+          // }
 
           //deep copy of paths
           var pathsCopy = [];
