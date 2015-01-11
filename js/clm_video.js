@@ -124,9 +124,15 @@ function calcLoop() {
   overlayCC.clearRect(0, 0, 400, 300);
 
   var currPos = ctrack.getCurrentPosition()
+
   if (currPos) {
     drawLips(overlay, currPos);
     displayPoints(currPos);
+
+	if(calibrateModeOn)
+		scale = 1;
+	else
+		scale = noseLength / Math.abs(currPos[33][1] - currPos[62][1]);
 
     if(paths.length < MIN_PATHS_LENGTH || spokenTimer > 0) //fill to 25 or currently speaking
       addPoints(paths, currPos);
@@ -168,11 +174,15 @@ function calcLoop() {
             pathsCopy.push(paths.shift());
 
           if(calibrateModeOn) { //calibration mode
+          	spokenTimer = 0;
             var inputWord = prompt("What word spoken?");
             askSaveCalibrationMatrix(inputWord, pathsCopy);
+            recordNoseLength(currPos); //assumes user's head is in a good position
           } else { //testing mode
             getBestWord(pathsCopy);
           }
+
+          paths = [];
         }
         closedTimer = spokenTimer = 0;
       }

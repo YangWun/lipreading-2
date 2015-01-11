@@ -1,14 +1,16 @@
+function log(msg) {
+  console.log(msg);
+}
+
 function getDictionary(firebase, cback, localStorage) {
-  var calibrationMatrices = firebase.child("calibrationMatrices");
-  calibrationMatrices.on("value", function(snapshot) {
+  function saveAndDisplayWords(snapshot) {
     var value = snapshot.val();
-    var dictionary = Object.keys(value);
     console.log('displaying current dictionary');
-    cback(dictionary);
-    localStorage.setItem("dictionary", dictionary);
-  }, function(err) {
-       console.log(err);
-     });
+    var wordList = calMatList2WordList(value);
+    cback(wordList);
+    localStorage.setItem("dictionary", wordList);
+  }
+  getWordsFromCalMatList(saveAndDisplayWords, log);
 }
 
 function displayDictionary(dictionary) {
@@ -22,13 +24,17 @@ function displayDictionary(dictionary) {
 }
 
 function displayOldDict() {
-  var oldDict = localStorage.dictionary.split(",");
-  if (oldDict) {
-    displayDictionary(oldDict);
-    console.log("displaying old dictionary from localStorage temporarily");
+  var oldDictStr = localStorage.dictionary;
+  if (oldDictStr) {
+    var oldDict = oldDictStr.split(",");
+    if (oldDict) {
+      displayDictionary(oldDict);
+      console.log("displaying old dictionary from localStorage temporarily");
+    }
   }
 }
+
 function doOnLoad() {
   displayOldDict();
-  var dictionary = getDictionary(firebase, displayDictionary, localStorage);
+  getDictionary(firebase, displayDictionary, localStorage);
 }
