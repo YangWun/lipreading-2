@@ -96,7 +96,6 @@ function getScore(A, B, i, j) {
 }
 
 function getBestWord(queryPath) {
-var dictionary = ["potato", "colonoscopy", "diabetes", "computer"];
   if(!confirm("Test with this query?"))
     return;
   document.getElementById("chart").style.display = "none";
@@ -182,15 +181,6 @@ function recordNoseLength(currPos) {
 
   //put in firebase
   firebase.child("noseLength").set(length);
-}
-
-function setScale(currPos) {
-  var length = Math.abs(currPos[33][1] - currPos[62][1]); //length of nose bridge
-  if(noseLength == -1) {
-    firebase.child("noseLength").on("value", function(snapshot) {
-      noseLength = snapshot.val();
-    });
-  }
 }
 
 function sortfunction(a,b) {
